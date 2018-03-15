@@ -6,7 +6,7 @@ Score = 0
 Level = 0
 Tiles = 0
 
-def Gameloop:
+def Gameloop():
  #gameloop goes here
  Print("Worked")
  menu = Input("Please enter where you want to go to: Controls, Main or Tutorial")
@@ -19,7 +19,7 @@ def Gameloop:
  else:
   menu = Input("Please enter a valid input, where you want to go to: Controls, Main or Tutorial")
 
-def Tutorial:
+def Tutorial():
  Print("Worked")
  menu = Input("Please enter where you want to go to: Controls, Main or Game")
  if menu == Controls:
@@ -31,7 +31,7 @@ def Tutorial:
  else:
   menu = Input("Please enter a valid input, where you want to go to: Controls, Main or Tutorial")
 
-def Mainmenu:
+def Mainmenu():
  Print("Welcome to Stayt")
  menu = Input("Please enter where you want to go to: Controls, Game or Tutorial")
  if menu == Controls:
@@ -43,7 +43,7 @@ def Mainmenu:
  else:
   menu = Input("Please enter a valid input, where you want to go to: Controls, Main or Tutorial")
 
-def Controlmenu:
+def Controlmenu():
   Print("These are the controls")
   Print("Arrows key are to move Up, Down, Left, and Right")
   Print("Press A in order to change to Solid state")
