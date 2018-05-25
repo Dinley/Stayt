@@ -1,3 +1,5 @@
+#!/usr/local/bin/python3.5m
+
 import pygame
  
 # Global constants
