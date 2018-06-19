@@ -6,7 +6,7 @@ pygame.init()
 
 done = False
 
-
+#detect key presses
 def pressed_keys() :
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -19,5 +19,12 @@ def pressed_keys() :
             if event.key == pygame.K_DOWN:
                 print('you hit down')
                 
+            #closing game
+            if event.key == pygame.K_ESCAPE:
+                    print('You hit escape')
+                    print('That quits the game')
+                    quit()
+
+#loop key press detection
 while done == False :
     pressed_keys()
