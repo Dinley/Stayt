@@ -2,8 +2,9 @@
 
 import pygame
 import key_presses
+#import hi_there
 
-pygame.init() 
+pygame.init()
 
 def main () :
     
@@ -23,8 +24,9 @@ def main () :
     while done == False :
         pygame.init()
         
+        #modules go here
         key_presses.pressed_keys(pygame)
-        
+        #hi_there.hell_yeah()
         
         
         #main loop
