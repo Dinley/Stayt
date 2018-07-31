@@ -56,22 +56,22 @@ pressed_up = False
 def go_right() :
     #moves player right
     global playerx
-    playerx += 7
+    playerx += 8
 
 def go_left() :
     #moves player left
     global playerx
-    playerx -= 7 #speed at which the player moves
+    playerx -= 8 #speed at which the player moves
 
 def go_up() :
     #moves player up
     global playery
-    playery -= 7 #speed at which the player moves
+    playery -= 8 #speed at which the player moves
 
 def go_down() :
     #moves player up
     global playery
-    playery += 7 #speed at which the player moves
+    playery += 8 #speed at which the player moves
 
 
 """key presses"""
