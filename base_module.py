@@ -11,7 +11,7 @@ pygame.init()
 
 """colors"""
 WHITE = (255, 255, 255)
-
+BLACK = (0, 0, 0)
 
 """screen dimensions"""
 SCREEN_WIDTH = 1000
@@ -36,6 +36,8 @@ liquid_sprite = pygame.image.load('liquid_sprite.png')
 playerx = HALF_SCREEN_WIDTH
 playery = HALF_SCREEN_HEIGHT
 
+#current_state = solid_sprite
+
 player = solid_sprite
 
 player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
@@ -56,22 +58,22 @@ pressed_up = False
 def go_right() :
     #moves player right
     global playerx
-    playerx += 8
+    playerx += 25
 
 def go_left() :
     #moves player left
     global playerx
-    playerx -= 8 #speed at which the player moves
+    playerx -= 25 #speed at which the player moves
 
 def go_up() :
     #moves player up
     global playery
-    playery -= 8 #speed at which the player moves
+    playery -= 25 #speed at which the player moves
 
 def go_down() :
     #moves player up
     global playery
-    playery += 8 #speed at which the player moves
+    playery += 25 #speed at which the player moves
 
 
 """key presses"""
@@ -80,6 +82,9 @@ def pressed_keys(pygame) :
     global player
     global playerx
     global playery
+    global current_state
+    global player_faceleft
+    global player_faceright
     
     global pressed_right
     global pressed_left
@@ -93,11 +98,13 @@ def pressed_keys(pygame) :
             if event.key == pygame.K_LEFT:
                 print('you hit left')
                 pressed_left = True
+                player = player_faceleft
                 #go_left()
             #moving right
             if event.key == pygame.K_RIGHT:
                 print ('you hit right')
                 pressed_right = True
+                player = player_faceright
                 #go_right()
             #moving up/jumping
             if event.key == pygame.K_UP:
@@ -113,14 +120,20 @@ def pressed_keys(pygame) :
             if event.key == pygame.K_a:
                 print('You changed to Solid')
                 player = solid_sprite
+                player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
+                player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
             #changing state to gas
             if event.key == pygame.K_s:
                 print('You changed to Gas')
                 player = gas_sprite
+                player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
+                player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
             #changing state liquid
             if event.key == pygame.K_d:
                 print('You changed to Liquid')
                 player = liquid_sprite
+                player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
+                player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
             
             #closing game
             if event.key == pygame.K_ESCAPE:
@@ -151,13 +164,14 @@ def main () :
     global player
     global player_faceleft
     global player_faceright
+    global current_state
     
     
     pygame.init()
     
-    done = False
+    game_running = False
 
-    while done == False :
+    while game_running == False :
         pygame.init()
         
         """run key press detection"""
@@ -165,10 +179,10 @@ def main () :
         
         if pressed_left:
             go_left()
-            player = player_faceleft
+            #player = player_faceleft
         if pressed_right:
             go_right()
-            player = player_faceright
+            #player = player_faceright
         if pressed_up:
             go_up()
         if pressed_down:
@@ -178,14 +192,14 @@ def main () :
         """main loop"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                done = True
+                game_running = True
             
             #closing game through escape key
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     print('You hit escape')
                     print('That quits the game')
-                    done = True
+                    game_running = True
         
         
         #fill screen background
