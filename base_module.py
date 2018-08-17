@@ -1,6 +1,8 @@
 #!/usr/local/bin/python3.5m
 
 import pygame
+import Genmod
+import random
 
 FPS = 60 #frames per second setting
 
@@ -12,6 +14,9 @@ pygame.init()
 """colors"""
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 """screen dimensions"""
 SCREEN_WIDTH = 1000
@@ -27,10 +32,11 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Stayt")
 
 
-"""player sprites and locations"""
+"""sprites and locations"""
 gas_sprite = pygame.image.load('gas_sprite.png')
 solid_sprite = pygame.image.load('solid_sprite.png')
 liquid_sprite = pygame.image.load('liquid_sprite.png')
+solidred = pygame.image.load('Solidred.png')
 
 #location of sprite (middle of screen as of now)
 playerx = HALF_SCREEN_WIDTH
@@ -43,13 +49,20 @@ player = solid_sprite
 player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
 player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
 
+global level
+level = Genmod.genlvl(3)
 
-"""render player"""
-def render_player(X, Y) : #,state)
+
+
+"""render objects"""
+def render_objects(X, Y) : #,state)
     screen.blit(player, (playerx, playery))
+    Genmod.buildlvl(level, screen, solidred)
     
     
-"""movement options"""
+    
+    
+    """movement options"""
 pressed_right = False
 pressed_left = False
 pressed_down = False
@@ -170,6 +183,10 @@ def main () :
     pygame.init()
     
     game_running = False
+    
+    
+    
+    
 
     while game_running == False :
         pygame.init()
@@ -205,8 +222,8 @@ def main () :
         #fill screen background
         screen.fill(WHITE)
         
-        #render player
-        render_player(pygame, screen)
+        #render objects
+        render_objects(pygame, screen)
         
         #update screen
         pygame.display.flip()
