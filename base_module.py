@@ -14,9 +14,6 @@ pygame.init()
 """colors"""
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
 
 """screen dimensions"""
 SCREEN_WIDTH = 1000
@@ -26,13 +23,7 @@ HALF_SCREEN_WIDTH = int(SCREEN_WIDTH / 2)
 HALF_SCREEN_HEIGHT = int(SCREEN_HEIGHT / 2)
 
 
-"""screen details"""
-size = [SCREEN_WIDTH, SCREEN_HEIGHT]
-screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Stayt")
-
-
-"""sprites and locations"""
+"""player sprites and locations"""
 gas_sprite = pygame.image.load('gas_sprite.png')
 solid_sprite = pygame.image.load('solid_sprite.png')
 liquid_sprite = pygame.image.load('liquid_sprite.png')
@@ -49,20 +40,69 @@ player = solid_sprite
 player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
 player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
 
+
 global level
 level = Genmod.genlvl(3)
 
+
+"""screen details"""
+size = [SCREEN_WIDTH, SCREEN_HEIGHT]
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Stayt")
+
+cameralimit = 420
+cameralimitleft = 360
+cameralimitright = 700
+camerax = 0
+cameray = 0
+print(camerax)
+print(cameray)
 
 
 """render objects"""
 def render_objects(X, Y) : #,state)
     screen.blit(player, (playerx, playery))
     Genmod.buildlvl(level, screen, solidred)
+
+
+"""moving the camera"""
+def move_camera() :
+    global playerx
+    global playery 
     
+    global cameralimit
+    global cameralimitleft
+    global cameralimitright
+    global camerax
+    global cameray
+    global HALF_SCREEN_HEIGHT
+    global HALF_SCREEN_WIDTH
     
+    playerCenterx = playerx + int(playerx / 2)
+    playerCentery = playery + int(playery / 2)
+    if (camerax + HALF_SCREEN_WIDTH) - playerCenterx > cameralimitleft:
+        #camerax = playerCenterx + cameralimitleft - HALF_SCREEN_WIDTH
+        print('you went left too much mate')
+        print(camerax)
+        playerx += 25
+        level[0][0][0] += 25
+    elif playerCenterx - (camerax + HALF_SCREEN_WIDTH) > cameralimitright:
+        #camerax = playerCenterx - cameralimitright - HALF_SCREEN_WIDTH
+        print('you went too far right')
+        print(camerax)
+        playerx -= 25
+        level[0][0][0] -= 25
+    if (cameray + HALF_SCREEN_HEIGHT) - playerCentery > cameralimit:
+        cameray = playerCentery + cameralimit - HALF_SCREEN_HEIGHT
+        #print('you went up')
+        print(cameray)
+    elif playerCentery - (cameray + HALF_SCREEN_HEIGHT) > cameralimit:
+        cameray = playerCentery - cameralimit - HALF_SCREEN_HEIGHT
+        #print('you went down')
+        print(cameray)
+
     
-    
-    """movement options"""
+"""movement options"""
 pressed_right = False
 pressed_left = False
 pressed_down = False
@@ -175,18 +215,15 @@ def main () :
     global pressed_up
     
     global player
+    global playerx
+    global playery
     global player_faceleft
     global player_faceright
     global current_state
     
-    
     pygame.init()
     
     game_running = False
-    
-    
-    
-    
 
     while game_running == False :
         pygame.init()
@@ -210,6 +247,8 @@ def main () :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_running = True
+                pygame.quit()
+                quit()
             
             #closing game through escape key
             elif event.type == pygame.KEYDOWN:
@@ -218,12 +257,14 @@ def main () :
                     print('That quits the game')
                     game_running = True
         
-        
         #fill screen background
         screen.fill(WHITE)
         
-        #render objects
+        #render player
         render_objects(pygame, screen)
+        
+        #move the camera
+        move_camera()
         
         #update screen
         pygame.display.flip()
