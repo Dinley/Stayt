@@ -12,8 +12,8 @@ dif = 1
 disdif = 5*dif #distance between platforms modifier
 
 def seed(): #activates the RNG 
- random.seed
- return
+   random.seed
+   return
 
 
 def genlvl(size): #creates an array of numbers that represents a level of a defined number of chunks
@@ -41,24 +41,24 @@ def buildlvl(level, screen, platformapperance): #converts the array from genlvl 
 
 def gentutorial():
     
- return
+   return
 
 
 def genchunk(chunknum): #creates individual chunks
- chunk = []
- NoP = 1 #number of platforms per chunk
- counter = 0
- while counter < NoP:#this number is the number of platforms per chunk
-    xcord = random.randrange(0, 1000, 1*disdif)
-    ycord = random.randrange(0, 800, 1*disdif)
-    chunk.append([xcord, ycord])
-    counter += 1
-   
- return chunk
+   chunk = []
+   NoP = 1 #number of platforms per chunk
+   counter = 0
+   while counter < NoP:#this number is the number of platforms per chunk
+      xcord = random.randrange(0, 1000, 1*disdif)
+      ycord = random.randrange(0, 800, 1*disdif)
+      chunk.append([xcord, ycord])
+      counter += 1
+     
+   return chunk
 
 
 def platbuild(xcord, ycord, screen, appearance):
    platwidth = int(100) 
    platheight = int(50)
    screen.blit(appearance, (xcord, ycord), (0, 0, platwidth, platheight))
-   return 
+   return
