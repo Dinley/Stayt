@@ -53,6 +53,9 @@ pygame.display.set_caption("Stayt")
 cameralimit = 420
 cameralimitleft = 360
 cameralimitright = 700
+cameralimitup = 300
+cameralimitdown = 600
+
 camerax = 0
 cameray = 0
 print(camerax)
@@ -73,6 +76,9 @@ def move_camera() :
     global cameralimit
     global cameralimitleft
     global cameralimitright
+    global cameralimitup
+    global cameralimitdown
+    
     global camerax
     global cameray
     global HALF_SCREEN_HEIGHT
@@ -81,25 +87,25 @@ def move_camera() :
     playerCenterx = playerx + int(playerx / 2)
     playerCentery = playery + int(playery / 2)
     if (camerax + HALF_SCREEN_WIDTH) - playerCenterx > cameralimitleft:
-        #camerax = playerCenterx + cameralimitleft - HALF_SCREEN_WIDTH
         print('you went left too much mate')
-        print(camerax)
+        #print(camerax)
         playerx += 25
         level[0][0][0] += 25
     elif playerCenterx - (camerax + HALF_SCREEN_WIDTH) > cameralimitright:
-        #camerax = playerCenterx - cameralimitright - HALF_SCREEN_WIDTH
         print('you went too far right')
-        print(camerax)
+        #print(camerax)
         playerx -= 25
         level[0][0][0] -= 25
-    if (cameray + HALF_SCREEN_HEIGHT) - playerCentery > cameralimit:
-        cameray = playerCentery + cameralimit - HALF_SCREEN_HEIGHT
+    if (cameray + HALF_SCREEN_HEIGHT) - playerCentery > cameralimitup:
+        playery += 25
+        level[0][0][1] += 25
         #print('you went up')
-        print(cameray)
-    elif playerCentery - (cameray + HALF_SCREEN_HEIGHT) > cameralimit:
-        cameray = playerCentery - cameralimit - HALF_SCREEN_HEIGHT
+        #print(cameray)
+    elif playerCentery - (cameray + HALF_SCREEN_HEIGHT) > cameralimitdown:
+        playery -= 25
+        level[0][0][1] -= 25
         #print('you went down')
-        print(cameray)
+        #print(cameray)
 
     
 """movement options"""
