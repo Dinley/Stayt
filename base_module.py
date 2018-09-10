@@ -41,6 +41,7 @@ Xspeed = 25
 Yspeed = 25
 Gravity = 2
 airtick = 0
+State = 0
 player = solid_sprite
 playersizex = 83
 playersizey = 68
@@ -143,7 +144,7 @@ def Stateup(state):
         player = liquid_sprite
         player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
         player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
-        Xspeed = 40
+        Xspeed = 25
         Yspeed = 25
         Gravity = 1
         playersizex = 78
@@ -174,7 +175,7 @@ def BorderCol():
         
  
      
-    if playery + playersizey < 0:
+    if playery < 0:
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
         Stateup(0)
@@ -187,7 +188,7 @@ def BorderCol():
 
 
 """Collision with Platforms"""
-def PLatCol():
+def PLatCol(State):
     global playerx
     global playery
     global levelsize
@@ -207,14 +208,24 @@ def PLatCol():
         elif playery > level[x][y][1] + platheight: #right
             col = 'right'          
         else:
-         colision = True
-         if level[x][y][0] < playerx < level[x][y][0] + platwidth or level[x][y][0] < playerx + playersizex < level[x][y][0] + platwidth:
+         if level[x][y][2] <= 5 and State == 0:
+            colision = True
+         elif 5 < level[x][y][2] <= 10 and State == 2:
+            colision = True
+         elif level[x][y][2] == 11:
+            colision = True
+         else:
+            colision = False
             
-            if level[x][y][1] < playery + playersizey < level[x][y][1] + platheight/2:
-                playery = level[x][y][1] - playersizey
+        if colision == True:
+         
+            if level[x][y][0] < playerx < level[x][y][0] + platwidth or level[x][y][0] < playerx + playersizex < level[x][y][0] + platwidth:
             
-            if level[x][y][1] + platheight/2 < playery + playersizey < level[x][y][1] + platheight:
-                playery = level[x][y][1] + platheight + 10
+             if level[x][y][1] < playery + playersizey < level[x][y][1] + platheight/2:
+                    playery = level[x][y][1] - playersizey
+            
+             if level[x][y][1] + platheight/2 < playery + playersizey < level[x][y][1] + platheight:
+                    playery = level[x][y][1] + platheight + 10
             
             
     if colision == True:
@@ -315,40 +326,34 @@ def pressed_keys(pygame) :
             
             #moving left
             if event.key == pygame.K_LEFT:
-                print('you hit left')
                 pressed_left = True
                 player = player_faceleft
                 #go_left()
                 
             #moving right
             if event.key == pygame.K_RIGHT:
-                print ('you hit right')
                 pressed_right = True
                 player = player_faceright
                 #go_right()
                 
             #moving up/jumping
             if event.key == pygame.K_UP:
-                print('you hit up')
                 pressed_up = True
                 #go_up()
                 
             #changing state to solid
             if event.key == pygame.K_a:
-                print('You changed to Solid')
                 State = 0
                 Stateup(0)
                 
             #changing state to gas
             if event.key == pygame.K_s:
-                print('You changed to Gas')
                 State = 1
                 Stateup(1)
 
                 
             #changing state to liquid
             if event.key == pygame.K_d:
-                print('You changed to Liquid')
                 State = 2
                 Stateup(2)
                 
@@ -423,8 +428,6 @@ def main () :
             #closing game through escape key
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    print('You hit escape')
-                    print('That quits the game')
                     game_running = True
         
         #fill screen background
@@ -434,7 +437,7 @@ def main () :
         render_objects(pygame, screen)
         
         #detect collision
-        PLatCol()
+        PLatCol(State)
         BorderCol()
         
         #Calculate Gravity
