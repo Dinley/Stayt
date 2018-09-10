@@ -62,7 +62,7 @@ def xedgebuild(screen):
    return
 
 def floorbuild(screen):
-   pygame.draw.rect(screen, red, (0, 795, 1000, 5), 0) 
+   pygame.draw.rect(screen, red, (0, 835, 1000, 5), 0) 
 
    
    return
