@@ -14,13 +14,12 @@ def seed(): #activates the RNG
 
 
 def genlvl(size): #creates an array of numbers that represents a level of a defined number of platforms
-   counter = 0
+   global level
    level = []
-   while counter < size:
-      platform = genplatform(counter) #creates a platform to be put into the level
+   for x in range(size):
+     # print(x)
+      platform = genplatform(x) #creates a platform to be put into the level
       level.append(platform)
-      counter += 1
-   print(level) #flag for testing
    
    return level
    
@@ -39,15 +38,16 @@ def gentutorial():
    return
 
 
-def genplatform(platformnum): #creates individual platforms
+def genplatform(x): #creates individual platforms
    platform = []
-   if platformnum == 0:
+   if x == 0:
     xcord = 50
     ycord = 400
     state = 11
     platform.append([xcord, ycord, state])  
    else:
-      xcord = random.randrange(100, 5000, 10)
+      newx = random.randrange(200, 5000, 10)
+      xcord = newx
       ycord = random.randrange(120, 700, 10)
       state = random.randrange(1, 10, 1)
       platform.append([xcord, ycord, state])  
