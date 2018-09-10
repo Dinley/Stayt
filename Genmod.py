@@ -1,11 +1,11 @@
 import random
 import pygame
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
+black = (0, 0, 0)
+white = (255, 255, 255)
+green = (0, 255, 0)
+red = (255, 0, 0)
+blue = (0, 0, 255)
 
 
 dif = 1
@@ -30,10 +30,11 @@ def genlvl(size): #creates an array of numbers that represents a level of a defi
    
    return level
    
-def buildlvl(level, screen, platformapperance): #converts the array from genlvl into actual platforms
+def buildlvl(level, screen): #converts the array from genlvl into actual platforms
    for x in range(len(level)):
       for y in range(len(level[x])): 
-         platbuild(level[x][y][0], level[x][y][1], screen, platformapperance)
+         platbuild(level[x][y][0], level[x][y][1], screen)
+   
  
    return
  
@@ -57,8 +58,29 @@ def genchunk(chunknum): #creates individual chunks
    return chunk
 
 
-def platbuild(xcord, ycord, screen, appearance):
+
+def xedgebuild(screen):
+   pygame.draw.rect(screen, red, (0, 0, 5, 800), 0) 
+
+   
+   return
+
+def floorbuild(screen):
+   pygame.draw.rect(screen, red, (0, 795, 1000, 5), 0) 
+
+   
+   return
+
+def topbuild(screen):
+   pygame.draw.rect(screen, red, (0, 0, 1000, 5), 0) 
+
+
+
+
+
+def platbuild(xcord, ycord, screen):
    platwidth = int(100) 
    platheight = int(50)
-   screen.blit(appearance, (xcord, ycord), (0, 0, platwidth, platheight))
+   platform = pygame.draw.rect(screen, green, (xcord, ycord, platwidth, platheight), 0)
    return
+ 
