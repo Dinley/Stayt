@@ -22,7 +22,7 @@ blue = (0, 0, 255)
 
 """screen dimensions"""
 SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 840
+SCREEN_HEIGHT = 800
 
 HALF_SCREEN_WIDTH = int(SCREEN_WIDTH / 2)
 HALF_SCREEN_HEIGHT = int(SCREEN_HEIGHT / 2)
@@ -39,12 +39,13 @@ liquid_sprite = pygame.image.load('liquid_sprite.png')
 """Starting stats"""
 Xspeed = 25
 Yspeed = 25
-Gravity = 2
+Gravity = 1
 airtick = 0
 State = 0
 player = solid_sprite
 playersizex = 83
 playersizey = 68
+endx = 5000
 
 
 # default platform size
@@ -62,8 +63,7 @@ player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite t
 player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
 
 
-levelsize = 10
-level = Genmod.genlvl(levelsize)
+level = Genmod.genlvl(15)
 
     
 
@@ -86,10 +86,12 @@ cameray = 0
 """render objects"""
 def render_objects(X, Y):
     global level
+    global endx
     screen.blit(player, (playerx, playery)) # the player
     Genmod.buildlvl(level, screen) # platforms
     Genmod.floorbuild(screen) # bottom kill plane
     Genmod.topbuild(screen) # top kill plane
+    Genmod.endbuild(screen, endx) #end of level plane
     
 
 """Calculate gravity"""
@@ -97,9 +99,9 @@ def CalcGrav():
     global Gravity
     global playery
     global airtick
+    if airtick > 100:
+     airtick = 100
     playery += Gravity*airtick
-    if airtick > 40:
-     airtick = 50
  
  
  
@@ -140,7 +142,7 @@ def Stateup(state):
         playersizex = 92
         playersizey = 62
         
-    if state ==2: #liquid
+    if state == 2: #liquid
         player = liquid_sprite
         player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
         player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
@@ -155,7 +157,7 @@ def Stateup(state):
 """Collision detections"""
 
 
-"""Collision with the floor and celling"""
+"""Collision with the floor, celling and the end of the level"""
 def BorderCol():
     global playerx
     global playery
@@ -165,13 +167,15 @@ def BorderCol():
     global SCREEN_HEIGHT
     global SCREEN_WIDTH
     global level
+    global endx
     
     
     if playery + playersizey > SCREEN_HEIGHT - 5:
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
+        airtick = 0
         Stateup(0)
-        level = Genmod.genlvl(levelsize)
+        level = Genmod.genlvl(15)
         
  
      
@@ -179,7 +183,18 @@ def BorderCol():
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
         Stateup(0)
-        level = Genmod.genlvl(levelsize)
+        airtick = 0
+        level = Genmod.genlvl(15)
+        
+    
+    if playerx > endx:
+        print('You finshed a level!')
+        playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
+        playerx = 75
+        Stateup(0)
+        airtick = 0
+        level = Genmod.genlvl(15)
+        endx = 5000
      
 
 
@@ -191,7 +206,6 @@ def BorderCol():
 def PLatCol(State):
     global playerx
     global playery
-    global levelsize
     global airtick
     global playersizex
     global playersizey
@@ -208,7 +222,7 @@ def PLatCol(State):
         elif playery > level[x][y][1] + platheight: #right
             col = 'right'          
         else:
-         if level[x][y][2] <= 5 and State == 0:
+         if level[x][y][2] <= 5 and State == 0: # checking if player is in right state to collide
             colision = True
          elif 5 < level[x][y][2] <= 10 and State == 2:
             colision = True
@@ -219,13 +233,13 @@ def PLatCol(State):
             
         if colision == True:
          
-            if level[x][y][0] < playerx < level[x][y][0] + platwidth or level[x][y][0] < playerx + playersizex < level[x][y][0] + platwidth:
+            if level[x][y][0] < playerx + playersizex/2 < level[x][y][0] + platwidth :
             
              if level[x][y][1] < playery + playersizey < level[x][y][1] + platheight/2:
-                    playery = level[x][y][1] - playersizey
+                playery = level[x][y][1] - playersizey
             
-             if level[x][y][1] + platheight/2 < playery + playersizey < level[x][y][1] + platheight:
-                    playery = level[x][y][1] + platheight + 10
+             if level[x][y][1] + platheight/2 < playery + playersizey:
+                colision = False
             
             
     if colision == True:
@@ -243,12 +257,11 @@ def move_camera() :
     global playery
     global Xspeed
     global Yspeed
+    global endx
     
     global cameralimit
     global cameralimitleft
     global cameralimitright
-    global cameralimitup
-    global cameralimitdown
     
     global camerax
     global cameray
@@ -262,12 +275,18 @@ def move_camera() :
         for x in range(len(level)):
              for y in range(len(level[x])): 
                  level[x][y][0] += Xspeed
+        
+        
+        endx += Xspeed  
                  
     elif playerCenterx - (camerax + HALF_SCREEN_WIDTH) > cameralimitright:
         playerx -= Xspeed
         for x in range(len(level)):
             for y in range(len(level[x])): 
                 level[x][y][0] -= Xspeed
+     
+     
+        endx -= Xspeed   
                 
 
     
@@ -361,10 +380,16 @@ def pressed_keys(pygame) :
             #restarting level
             
             if event.key == pygame.K_i:
-                level = Genmod.genlvl(levelsize)
+                level = Genmod.genlvl(15)
                 playerx = 75
                 playersizey = SCREEN_HEIGHT/2
-                print('Level Reset')
+                
+                
+            if event.key == pygame.K_c:
+                print(playerx)
+                print(playery)
+                print(endx)
+                
             
             #closing game
             if event.key == pygame.K_ESCAPE:
@@ -396,7 +421,7 @@ def main () :
     global playery
     global player_faceleft
     global player_faceright
-    global current_state
+    global state
     
     pygame.init()
     
