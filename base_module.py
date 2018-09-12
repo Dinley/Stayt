@@ -46,6 +46,7 @@ player = solid_sprite
 playersizex = 83
 playersizey = 68
 endx = 5000
+score = 0
 
 
 # default platform size
@@ -168,32 +169,37 @@ def BorderCol():
     global SCREEN_WIDTH
     global level
     global endx
+    global score
     
     
-    if playery + playersizey > SCREEN_HEIGHT - 5:
+    if playery + playersizey > SCREEN_HEIGHT - 5: # bottom kill plane
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
         airtick = 0
-        Stateup(0)
+        print(score)
+        score = 0
         level = Genmod.genlvl(15)
-        
+        Stateup(0)
  
      
-    if playery < 0:
+    if playery < 0: #top kill plane
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
-        Stateup(0)
         airtick = 0
+        print(score)
+        score = 0
         level = Genmod.genlvl(15)
+        Stateup(0)
         
     
-    if playerx > endx:
+    if playerx > endx: # goaline 
         print('You finshed a level!')
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
-        Stateup(0)
         airtick = 0
+        score += 1
         level = Genmod.genlvl(15)
+        Stateup(0)
         endx = 5000
      
 
@@ -233,13 +239,13 @@ def PLatCol(State):
             
         if colision == True:
          
-            if level[x][y][0] < playerx + playersizex/2 < level[x][y][0] + platwidth :
-            
+            if level[x][y][0] < playerx + playersizex/2 < level[x][y][0] + platwidth:
+                
              if level[x][y][1] < playery + playersizey < level[x][y][1] + platheight/2:
                 playery = level[x][y][1] - playersizey
             
              if level[x][y][1] + platheight/2 < playery + playersizey:
-                colision = False
+                 colision = False
             
             
     if colision == True:
