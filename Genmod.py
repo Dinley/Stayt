@@ -6,6 +6,7 @@ white = (255, 255, 255)
 green = (0, 255, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
+purple = (0, 200, 200)
 
 
 def seed(): #activates the RNG 
@@ -39,6 +40,7 @@ def gentutorial():
 
 
 def genplatform(x): #creates individual platforms
+   global xcord
    platform = []
    if x == 0:
     xcord = 50
@@ -47,6 +49,8 @@ def genplatform(x): #creates individual platforms
     platform.append([xcord, ycord, state])  
    else:
       newx = random.randrange(200, 5000, 10)
+      while not xcord + 200 < newx < xcord + 400:
+         newx = random.randrange(200, 5000, 10)
       xcord = newx
       ycord = random.randrange(120, 700, 10)
       state = random.randrange(1, 10, 1)
@@ -55,20 +59,18 @@ def genplatform(x): #creates individual platforms
 
 
 
-def xedgebuild(screen):
-   pygame.draw.rect(screen, red, (0, 0, 5, 800), 0) 
 
-   
-   return
 
 def floorbuild(screen):
-   pygame.draw.rect(screen, red, (0, 835, 1000, 5), 0) 
+   pygame.draw.rect(screen, red, (0, 795, 1000, 5), 0) 
 
-   
-   return
 
 def topbuild(screen):
-   pygame.draw.rect(screen, red, (0, 0, 1000, 5), 0) 
+   pygame.draw.rect(screen, red, (0, 0, 1000, 5), 0)
+   
+
+def endbuild(screen, endx):
+   pygame.draw.rect(screen, purple, (endx, 0, 5, 800), 0)
 
 
 
