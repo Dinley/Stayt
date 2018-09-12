@@ -18,7 +18,6 @@ def genlvl(size): #creates an array of numbers that represents a level of a defi
    global level
    level = []
    for x in range(size):
-     # print(x)
       platform = genplatform(x) #creates a platform to be put into the level
       level.append(platform)
    
