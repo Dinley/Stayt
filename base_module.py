@@ -37,16 +37,17 @@ liquid_sprite = pygame.image.load('liquid_sprite.png')
 
 
 """Starting stats"""
-Xspeed = 25
-Yspeed = 25
-Gravity = 1
-airtick = 0
-State = 0
-player = solid_sprite
-playersizex = 83
-playersizey = 68
-endx = 5000
-score = 0
+Xspeed = 25 #player's move speed along x axis
+Yspeed = 25 #player's move speed along y axis
+Gravity = 1 #direction/force of gravity
+airtick = 0 #how long the player is in the air for
+State = 0 #what state the player is in
+player = solid_sprite #what the player looks like
+playersizex = 83 #player's x size
+playersizey = 68 #player's y size
+endx = 5000 #the x co-ordinate of the goal line
+score = 0 #the player's current score
+maxscore = 0 #the highest score the player has gotten this session
 
 
 # default platform size
@@ -69,16 +70,14 @@ level = Genmod.genlvl(15)
     
 
 """screen details"""
-size = [SCREEN_WIDTH, SCREEN_HEIGHT]
+size = [SCREEN_WIDTH, SCREEN_HEIGHT] #size of screen
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Stayt")
 
 
 
-cameralimitleft = 400
+cameralimitleft = 400 #how far the player must move to get the camera to follow them
 cameralimitright = 700
-cameralimitup = 300
-cameralimitdown = 1000
 
 camerax = 0
 cameray = 0
@@ -100,9 +99,9 @@ def CalcGrav():
     global Gravity
     global playery
     global airtick
-    if airtick > 35:
+    if airtick > 35: #gravity limiter
      airtick = 35
-    playery += Gravity*(airtick)
+    playery += Gravity*(airtick) #applying gravity
  
  
  
@@ -123,7 +122,7 @@ def Stateup(state):
     global playersizey    
 
 
-    if state == 0: #solid
+    if state == 0: # change state to solid
         player = solid_sprite
         player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
         player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
@@ -134,7 +133,7 @@ def Stateup(state):
         playersizey = 68
         State = 0
         
-    if state == 1: #gas
+    if state == 1: # change state to gas
         player = gas_sprite
         player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
         player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
@@ -145,7 +144,7 @@ def Stateup(state):
         playersizey = 62
         State = 1
         
-    if state == 2: #liquid
+    if state == 2: # change state to liquid
         player = liquid_sprite
         player_faceleft = pygame.transform.flip(player, True, False) #flips the sprite to face left
         player_faceright = pygame.transform.flip(player_faceleft, True, False) #flips the sprite to face right
@@ -173,31 +172,36 @@ def BorderCol():
     global level
     global endx
     global score
+    global maxscore
     
     
     if playery + playersizey > SCREEN_HEIGHT - 5: # bottom kill plane
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
         airtick = 0
-        print(score)
+        print("Your score this time was: " + str(score))
+        if score > maxscore:
+          maxscore = score
         score = 0
         level = Genmod.genlvl(15)
         Stateup(0)
         endx = 5000
  
      
-    if playery < 0: #top kill plane
+    if playery < 0: #top kill plane 
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
         airtick = 0
-        print(score)
+        print("Your score this time was: " + str(score))
+        if score > maxscore:
+          maxscore = score
         score = 0
         level = Genmod.genlvl(15)
         Stateup(0)
         endx = 5000
         
     
-    if playerx > endx: # goaline 
+    if playerx > endx: # goal line
         print('You finshed a level!')
         playery = SCREEN_HEIGHT/2 - platheight/2 - playersizey
         playerx = 75
@@ -246,7 +250,7 @@ def PLatCol(State):
          
             if level[x][y][0] < playerx + playersizex/2 < level[x][y][0] + platwidth:
                 
-             if level[x][y][1] < playery + playersizey < level[x][y][1] + platheight/2:
+             if level[x][y][1] < playery + playersizey < level[x][y][1] + platheight/2 + 36:
                 playery = level[x][y][1] - playersizey
             
              if level[x][y][1] + platheight/2 < playery + playersizey:
@@ -254,10 +258,10 @@ def PLatCol(State):
             
             
     if colision == True:
-        airtick = 0
+        airtick = 0 # stopping downwards acceleration
           
     else:
-       airtick += 1
+       airtick += 1 # increase downwards acceleration
         
         
 
@@ -279,25 +283,26 @@ def move_camera() :
     global HALF_SCREEN_HEIGHT
     global HALF_SCREEN_WIDTH
     
-    playerCenterx = playerx + int(playerx / 2)
+    playerCenterx = playerx + int(playerx / 2) #move "camera" when player moves to the left
     playerCentery = playery + int(playery / 2)
     if (camerax + HALF_SCREEN_WIDTH) - playerCenterx > cameralimitleft:
         playerx += Xspeed
-        for x in range(len(level)):
+        for x in range(len(level)): # moves each platform
              for y in range(len(level[x])): 
                  level[x][y][0] += Xspeed
+    
         
         
-        endx += Xspeed  
+        endx += Xspeed  # moves the goal line 
                  
-    elif playerCenterx - (camerax + HALF_SCREEN_WIDTH) > cameralimitright:
+    elif playerCenterx - (camerax + HALF_SCREEN_WIDTH) > cameralimitright: #move "camera" when player moves to the right
         playerx -= Xspeed
-        for x in range(len(level)):
+        for x in range(len(level)): # moves each platform
             for y in range(len(level[x])): 
                 level[x][y][0] -= Xspeed
      
      
-        endx -= Xspeed   
+        endx -= Xspeed   # moves the goal line 
                 
 
     
@@ -364,12 +369,10 @@ def pressed_keys(pygame) :
             if event.key == pygame.K_RIGHT:
                 pressed_right = True
                 player = player_faceright
-                #go_right()
                 
             #moving up/jumping
             if event.key == pygame.K_UP:
                 pressed_up = True
-                #go_up()
                 
             #changing state to solid
             if event.key == pygame.K_a:
@@ -389,17 +392,11 @@ def pressed_keys(pygame) :
                 
             
             #restarting level
-            
             if event.key == pygame.K_i:
                 level = Genmod.genlvl(15)
                 playerx = 75
                 playersizey = SCREEN_HEIGHT/2
                 
-                
-            if event.key == pygame.K_c:
-                print(playerx)
-                print(playery)
-                print(endx)
                 
             
             #closing game
@@ -421,7 +418,6 @@ def pressed_keys(pygame) :
 
 """main loop"""
 def main () :
-    #which global variables the function is referencing
     global pressed_right
     global pressed_left
     global ressed_down
@@ -446,10 +442,8 @@ def main () :
         
         if pressed_left:
             go_left()
-            #player = player_faceleft
         if pressed_right:
             go_right()
-            #player = player_faceright
         if pressed_up:
             go_up()
         
