@@ -100,9 +100,9 @@ def CalcGrav():
     global Gravity
     global playery
     global airtick
-    if airtick > 100:
-     airtick = 100
-    playery += Gravity*airtick
+    if airtick > 35:
+     airtick = 35
+    playery += Gravity*(airtick)
  
  
  
@@ -132,6 +132,7 @@ def Stateup(state):
         Gravity = 1
         playersizex = 83
         playersizey = 68
+        State = 0
         
     if state == 1: #gas
         player = gas_sprite
@@ -142,6 +143,7 @@ def Stateup(state):
         Gravity = -1
         playersizex = 92
         playersizey = 62
+        State = 1
         
     if state == 2: #liquid
         player = liquid_sprite
@@ -152,6 +154,7 @@ def Stateup(state):
         Gravity = 1
         playersizex = 78
         playersizey = 51
+        State = 2
         
     
     
@@ -180,6 +183,7 @@ def BorderCol():
         score = 0
         level = Genmod.genlvl(15)
         Stateup(0)
+        endx = 5000
  
      
     if playery < 0: #top kill plane
@@ -190,6 +194,7 @@ def BorderCol():
         score = 0
         level = Genmod.genlvl(15)
         Stateup(0)
+        endx = 5000
         
     
     if playerx > endx: # goaline 
